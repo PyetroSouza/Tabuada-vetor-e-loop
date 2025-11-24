@@ -11,6 +11,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class TelaTabuada extends Application{
@@ -26,7 +31,7 @@ public class TelaTabuada extends Application{
 
         // Criar o root - componente de leitute principal
         VBox root = new VBox();
-        root.setStyle("-fx-background-color: #cae7d5;");
+        root.setStyle("-fx-background-color: #1fe111;");
 
         // Criamos a cena e colocamos o ROOT nela
         Scene scene = new Scene(root);
@@ -140,11 +145,21 @@ public class TelaTabuada extends Application{
 
            String[] resultado = usuario.calcularTabuada();
            listaTabuada.getItems().addAll(resultado);
+
+           //gravar os dados da tabuada em arquivo
+            Path arquivo = Path.of("c:\\Users\\25205137\\DS1T\\tabuada\\dados_tabuada.csv");
+
+            String dados = textFieldMultiplicando.getText() + ";" + textFieldMenorMultiplicador.getText() + ";" + textFieldMaiorMultiplicador.getText() + ";" + ";" + LocalDateTime.now()/*o local,data e a hora de AGORA*/+ ";" + "\n"; //próxima linha
+           /* mostrar algo que pode dar erro */ try {
+                Files.writeString(arquivo, dados, StandardOpenOption.APPEND );
+            } catch /* caso dê erro*/ (IOException erro){
+                System.out.println(erro.getMessage());
+            }
         });
         botaoLimpar.setOnAction(e -> {
-            textFieldMaiorMultiplicador.setText("");
-            textFieldMenorMultiplicador.setText("");
-            textFieldMultiplicando.setText("");
+            textFieldMaiorMultiplicador.clear();
+            textFieldMenorMultiplicador.clear();
+            textFieldMultiplicando.clear();
             listaTabuada.getItems().clear();
             textFieldMultiplicando.requestFocus();
         });
